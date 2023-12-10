@@ -3,6 +3,7 @@ import sys
 
 class Game:
     def __init__(self):
+        
         pygame.init()
         self.screen_width = 450
         self.screen_height = 750
@@ -20,6 +21,7 @@ class Game:
         self.net_position = self.screen_height // 2 - self.net_width // 2
 
     def run_game(self):
+
         while self.game_running:
             self.screen.fill((0, 128, 0))  # Fill the screen with green color
 
@@ -37,6 +39,18 @@ class Game:
             if keys[pygame.K_DOWN] and self.player_y < self.screen_height - self.player_height:
                 self.player_y += self.player_speed
 
+            #
+
+            # Update ball's position and behavior
+            # Update AI and ball based on game logic
+            self.ai.update(self.ball)
+            self.ball.update()
+            self.ball.check_collision_with_player(self.player)
+            self.ball.check_collision_with_ai(self.ai)
+
+            # Update AI's movement based on FSM
+            self.ai.update()
+
             # Restrict the player to the bottom half of the court
             if self.player_y < self.screen_height // 2:
                 self.player_y = self.screen_height // 2
@@ -51,6 +65,9 @@ class Game:
 
             # Draw the player paddle
             pygame.draw.rect(self.screen, (0, 0, 255), (self.player_x, self.player_y, self.player_width, self.player_height))
+            
+            # Draw the game elements (court, player, ball, AI, etc.)
+            self.draw_game_elements()
 
             pygame.display.flip()
             self.clock.tick(60)
