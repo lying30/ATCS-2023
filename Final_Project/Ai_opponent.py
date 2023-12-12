@@ -10,14 +10,15 @@ class Ai_opponent:
         self.screen_width = screen_width
         self.x = (screen_width - self.width) // 2
         self.y = 10
-        self.speed_forward = 5  # Speed for forward and backward movement
-        self.speed_sideways = 2  # Speed for left and right movement
+        self.speed_forward = 4.7  # Speed for forward and backward movement
+        self.speed_sideways = 3  # Speed for left and right movement
+        self.speed_backwards = 2.6
 
     def update(self, ball, ball_has_moved):
         # Implement AI logic to move the paddle in response to the ball's position
         if ball_has_moved:
             if ball.y < self.y:
-                self.y -= self.speed_forward
+                self.y -= self.speed_backwards
             elif ball.y > self.y + self.height:
                 self.y += self.speed_forward
             

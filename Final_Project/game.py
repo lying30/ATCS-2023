@@ -37,6 +37,9 @@ class Game:
             # Update ball's position and behavior
             self.ball.update()
 
+            keys = pygame.key.get_pressed()
+            self.player.update(keys)    
+                    
             # self.ball.check_collision_with_player(self.player)
             # self.ball.check_collision_with_ai(self.ai_opponent)
 
