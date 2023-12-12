@@ -2,6 +2,7 @@ import pygame
 import sys
 from ball import Ball
 from Ai_opponent import Ai_opponent
+from player import Player
 
 class Game:
     def __init__(self):
@@ -12,23 +13,14 @@ class Game:
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption("Tennis Game")
         self.clock = pygame.time.Clock()
-        self.player_width = 20
-        self.player_height = 80
-        self.player_x = (self.screen_width - self.player_width) // 2
-        self.player_y = self.screen_height - self.player_height - 10
-        self.player_speed = 5
         self.game_running = True
         self.net_width = 5
         self.net_color = (255, 255, 255)
         self.net_position = self.screen_height // 2 - self.net_width // 2
 
-        
-
-        self.ball = Ball(self.player_x, self.player_y)  # Replace initial_x_position and initial_y_position with appropriate coordinates
-
+        self.player = Player(self.screen_width, self.screen_height)
+        self.ball = Ball(self.player.x, self.player.y)  # Replace initial_x_position and initial_y_position with appropriate coordinates
         self.ai_opponent = Ai_opponent(self.screen_width, self.screen_height)  # Pass screen width and height
-
-
 
     def run_game(self):
 
@@ -39,22 +31,12 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.game_running = False
 
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_LEFT] and self.player_x > 0:
-                self.player_x -= self.player_speed
-            if keys[pygame.K_RIGHT] and self.player_x < self.screen_width - self.player_width:
-                self.player_x += self.player_speed
-            if keys[pygame.K_UP] and self.player_y > self.screen_height // 2:
-                self.player_y -= self.player_speed
-            if keys[pygame.K_DOWN] and self.player_y < self.screen_height - self.player_height:
-                self.player_y += self.player_speed
-
-            #
-
-            # Update ball's position and behavior
             # Update AI and ball based on game logic
             self.ai_opponent.update(self.ball, self.ball.ball_started_moving)
+
+            # Update ball's position and behavior
             self.ball.update()
+
             # self.ball.check_collision_with_player(self.player)
             # self.ball.check_collision_with_ai(self.ai_opponent)
 
@@ -62,10 +44,10 @@ class Game:
             # self.ai.update()
 
             # Restrict the player to the bottom half of the court
-            if self.player_y < self.screen_height // 2:
-                self.player_y = self.screen_height // 2
-            if self.player_y > self.screen_height - self.player_height:
-                self.player_y = self.screen_height - self.player_height
+            if self.player.y < self.screen_height // 2:
+                self.player.y = self.screen_height // 2
+            if self.player.y > self.screen_height - self.player.height:
+                self.player.y = self.screen_height - self.player.height
 
             # Draw the tennis court
             pygame.draw.rect(self.screen, (255, 255, 255), (0, 0, self.screen_width, self.screen_height))  # White background
@@ -74,7 +56,7 @@ class Game:
             pygame.draw.rect(self.screen, self.net_color, (0, self.screen_height // 2 - self.net_width // 2, self.screen_width, self.net_width))  # Net
 
             # Draw the player paddle
-            pygame.draw.rect(self.screen, (0, 0, 255), (self.player_x, self.player_y, self.player_width, self.player_height))
+            self.player.draw(self.screen)
             
             #Draw the ball
             self.ball.draw(self.screen)
