@@ -1,5 +1,7 @@
 import pygame
 import sys
+from ball import Ball
+from Ai_opponent import Ai_opponent
 
 class Game:
     def __init__(self):
@@ -19,6 +21,14 @@ class Game:
         self.net_width = 5
         self.net_color = (255, 255, 255)
         self.net_position = self.screen_height // 2 - self.net_width // 2
+
+        
+
+        self.ball = Ball(self.player_x, self.player_y)  # Replace initial_x_position and initial_y_position with appropriate coordinates
+
+        self.ai_opponent = Ai_opponent(self.screen_width, self.screen_height)  # Pass screen width and height
+
+
 
     def run_game(self):
 
@@ -43,13 +53,13 @@ class Game:
 
             # Update ball's position and behavior
             # Update AI and ball based on game logic
-            self.ai.update(self.ball)
+            self.ai_opponent.update(self.ball, self.ball.ball_started_moving)
             self.ball.update()
-            self.ball.check_collision_with_player(self.player)
-            self.ball.check_collision_with_ai(self.ai)
+            # self.ball.check_collision_with_player(self.player)
+            # self.ball.check_collision_with_ai(self.ai_opponent)
 
             # Update AI's movement based on FSM
-            self.ai.update()
+            # self.ai.update()
 
             # Restrict the player to the bottom half of the court
             if self.player_y < self.screen_height // 2:
@@ -66,8 +76,11 @@ class Game:
             # Draw the player paddle
             pygame.draw.rect(self.screen, (0, 0, 255), (self.player_x, self.player_y, self.player_width, self.player_height))
             
-            # Draw the game elements (court, player, ball, AI, etc.)
-            self.draw_game_elements()
+            #Draw the ball
+            self.ball.draw(self.screen)
+
+            #Draw the AI opponent
+            self.ai_opponent.draw(self.screen)
 
             pygame.display.flip()
             self.clock.tick(60)
