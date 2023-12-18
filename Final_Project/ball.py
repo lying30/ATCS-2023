@@ -28,11 +28,11 @@ class Ball:
         self.key_left_pressed_time = 0
         self.key_right_pressed_time = 0
 
-        # Factors to adjust speed based on key press duration
+    # Start ChatGPT Code: Factors to adjust speed based on key press duration
         self.speed_multiplier = 1.5  # Modify this value to suit your game
+    # End ChatGPT Code
 
     def init_fsm(self):
-        # I did this
         # Spawned with player, move up + direction
         self.fsm.add_transition("move_left", self.SPAWN, self.move_1, self.MOVE_UP)
         self.fsm.add_transition("move_left_middle", self.SPAWN, self.move_2, self.MOVE_UP)
@@ -63,13 +63,10 @@ class Ball:
         self.fsm.add_transition("move_right_middle", self.HIT_PLAYER, self.move_3, self.MOVE_UP)
         self.fsm.add_transition("move_right", self.HIT_PLAYER, self.move_4, self.MOVE_UP)
 
-
-        # ... Add other transitions as per ball's behavior in the game
-
     def get_state(self):
         return self.fsm.current_state
 
-    # Methods for ball movement based on transitions
+# Start ChatGPT Code: Methods for ball movement based on transitions
     def move_1(self):
         self.ball_started_moving = True
         # Calculate rise and run for moving to the left side of the court
@@ -129,13 +126,14 @@ class Ball:
 
     def stop_horizontal_movement(self):
         self.velocity_x = 0
+# End ChatGPT Code
 
     def update(self):
         # Update ball's position based on its velocity
         self.x += self.velocity_x
         self.y += self.velocity_y
 
-        # Restrict ball boundaries, made by me
+        # Restrict ball boundaries
         if self.y >= self.screen_height:  
             self.y = self.screen_height
         if self.y <= 0: 
@@ -148,6 +146,7 @@ class Ball:
         # Process input and adjust ball's direction and speed based on key press duration
         self.handle_input()
 
+# Start ChatGPT Code:
     def handle_input(self):
         # Reset velocities
         self.velocity_x = 0
@@ -190,6 +189,8 @@ class Ball:
             self.velocity_x -= self.speed * self.speed_multiplier * self.key_left_pressed_time / 100
         if self.key_right_pressed_time > 0:
             self.velocity_x += self.speed * self.speed_multiplier * self.key_right_pressed_time / 100
+# End ChatGPT Code
+
 
     # def check_collision_with_player(self, player):
     #     # Implement collision detection logic with the player paddle

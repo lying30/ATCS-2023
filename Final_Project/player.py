@@ -1,5 +1,5 @@
 import pygame
-
+# START ChatGPT Code
 class Player:
     def __init__(self, screen_width, screen_height):
         self.width = 20
@@ -23,3 +23,4 @@ class Player:
 
     def draw(self, screen):
         pygame.draw.rect(screen, (0, 0, 255), (self.x, self.y, self.width, self.height))
+# END ChatGPT Code

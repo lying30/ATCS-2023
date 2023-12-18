@@ -1,19 +1,5 @@
-"""
-This module implements a Finite State Machine (FSM).
 
-You define an FSM by building a dictionary of transitions. For a given input symbol,
-the process() method uses the dictionary to decide what action to call and what
-the next state will be. The FSM has a dictionary of transitions that associate the tuples:
-
-        (input_symbol, current_state) --> (action, next_state)
-
-Where "action" is a function you define. The symbols and states can be any
-objects. You use the add_transition() method to add to the transition table.
-
-@author: Ms. Namasivayam
-@version: 2022
-"""
-
+# FSM I made from MangoGame
 
 class FSM:
     def __init__(self, initial_state):
@@ -38,7 +24,6 @@ class FSM:
             action (function, optional): The action to take/function to run. Defaults to None.
             next_state (anything, optional): The next state to transition to. Defaults to None.
         """
-        # TODO: implement add transition
         self.state_transitions[(input_symbol, state)] = (action, next_state)
 
 
@@ -55,7 +40,6 @@ class FSM:
         Returns:
             tuple: Returns the tuple (action, next_state)
         """
-        # TODO: Implement get transition
         return self.state_transitions[(input_symbol, state)]
 
     def process(self, input_symbol):
@@ -69,7 +53,6 @@ class FSM:
         Args:
             input_symbol (anything): The input to process
         """
-        # TODO: Implement process
         my_tuple = self.get_transition(input_symbol, self.current_state)
         print(my_tuple[1])
         action = my_tuple[0]

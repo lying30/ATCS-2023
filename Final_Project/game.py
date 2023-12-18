@@ -4,9 +4,10 @@ from ball import Ball
 from Ai_opponent import Ai_opponent
 from player import Player
 
+# START ChatGPT Code:
 class Game:
     def __init__(self):
-        
+
         pygame.init()
         self.screen_width = 450
         self.screen_height = 750
@@ -19,8 +20,8 @@ class Game:
         self.net_position = self.screen_height // 2 - self.net_width // 2
 
         self.player = Player(self.screen_width, self.screen_height)
-        self.ball = Ball(self.player.x, self.player.y)  # Replace initial_x_position and initial_y_position with appropriate coordinates
-        self.ai_opponent = Ai_opponent(self.screen_width, self.screen_height)  # Pass screen width and height
+        self.ball = Ball(self.player.x, self.player.y)
+        self.ai_opponent = Ai_opponent(self.screen_width, self.screen_height)
 
     def run_game(self):
 
@@ -61,10 +62,10 @@ class Game:
             # Draw the player paddle
             self.player.draw(self.screen)
             
-            #Draw the ball
+            # Draw the ball
             self.ball.draw(self.screen)
 
-            #Draw the AI opponent
+            # Draw the AI opponent
             self.ai_opponent.draw(self.screen)
 
             pygame.display.flip()
@@ -75,3 +76,5 @@ class Game:
 if __name__ == "__main__":
     game = Game()
     game.run_game()
+
+# END ChatGPT Code:

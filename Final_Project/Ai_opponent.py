@@ -8,37 +8,54 @@ class Ai_opponent:
         self.height = 80
         self.screen_height = screen_height
         self.screen_width = screen_width
-        self.x = (screen_width - self.width) // 2
-        self.y = 10
-        self.speed_forward = 4.7  # Speed for forward and backward movement
+        self.XSTART = (screen_width - self.width) // 2
+        self.YSTART = 10
+        self.x = self.XSTART
+        self.y = self.YSTART
+        self.speed_forward = 4.7  # Speed for forward movement
         self.speed_sideways = 3  # Speed for left and right movement
-        self.speed_backwards = 2.6
+        self.speed_backwards = 2.6 # Speed for backward movement
 
     def update(self, ball, ball_has_moved):
         # Implement AI logic to move the paddle in response to the ball's position
         if ball_has_moved:
-            if ball.y < self.y:
-                self.y -= self.speed_backwards
-            elif ball.y > self.y + self.height:
+            if ball.y < self.screen_height / 2:
+                if ball.y < self.y:
+                    self.y -= self.speed_backwards
+                elif ball.y > self.y + self.height:
+                    self.y += self.speed_forward
+            # Recovers the y to the center of court after ball crosses the net
+            elif self.y < self.YSTART:
                 self.y += self.speed_forward
+            elif self.y > self.YSTART:
+                self.y -= self.speed_backwards
+            elif self.y == self.YSTART:
+                self.y += 0
+
             
             # Ensure AI cross net or move off screen
-            # made by me
-            if self.y >= self.screen_height/2 - self.height:  # Adjust the value according to the net position
+            if self.y >= self.screen_height/2 - self.height:
                 self.y = self.screen_height/2 - self.height
-            if self.y <= 0:  # Adjust the value according to the net position
+            if self.y <= 0: 
                 self.y = 0
             if self.x <= 0:
                 self.x = 0
             if self.x >= self.screen_width - self.width:
                 self.x = self.screen_width - self.width
 
-            
+            # If ball is on AI side of court
             # Move sideways (left and right)
-            if ball.x < self.x:
-                self.x -= self.speed_sideways
-            elif ball.x > self.x + self.width:
+            if ball.y < self.screen_height / 2:
+                if ball.x < self.x:
+                    self.x -= self.speed_sideways
+                elif ball.x > self.x + self.width:
+                    self.x += self.speed_sideways
+            elif self.x < self.XSTART:
                 self.x += self.speed_sideways
+            elif self.x > self.XSTART:
+                self.x -= self.speed_sideways
+            elif self.x == self.XSTART:
+                self.x += 0
 
             # # Move towards the spawn point if the ball is in the opponent's half
             # if ball.y > self.screen_height / 2:
