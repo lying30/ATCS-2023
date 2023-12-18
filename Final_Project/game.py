@@ -44,8 +44,6 @@ class Game:
             # self.ball.check_collision_with_player(self.player)
             # self.ball.check_collision_with_ai(self.ai_opponent)
 
-            # Update AI's movement based on FSM
-            # self.ai.update()
 
             # Restrict the player to the bottom half of the court
             if self.player.y < self.screen_height // 2:

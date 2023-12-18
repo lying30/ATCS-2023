@@ -54,7 +54,6 @@ class FSM:
             input_symbol (anything): The input to process
         """
         my_tuple = self.get_transition(input_symbol, self.current_state)
-        print(my_tuple[1])
         action = my_tuple[0]
         next_state = my_tuple[1]
         if action:
