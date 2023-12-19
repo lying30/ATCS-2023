@@ -35,14 +35,16 @@ class Game:
             # Update AI and ball based on game logic
             self.ai_opponent.update(self.ball, self.ball.ball_started_moving)
 
+            boolean_player = self.ball.check_collision_with_player(self.player)
+            boolean_ai = self.ball.check_collision_with_ai(self.ai_opponent)    
+
             # Update ball's position and behavior
-            self.ball.update()
+            self.ball.update(boolean_player, boolean_ai)
 
             keys = pygame.key.get_pressed()
             self.player.update(keys)    
                     
-            # self.ball.check_collision_with_player(self.player)
-            # self.ball.check_collision_with_ai(self.ai_opponent)
+            
 
 
             # Restrict the player to the bottom half of the court

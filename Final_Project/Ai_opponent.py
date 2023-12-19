@@ -57,13 +57,6 @@ class Ai_opponent:
             elif self.x == self.XSTART:
                 self.x += 0
 
-            # # Move towards the spawn point if the ball is in the opponent's half
-            # if ball.y > self.screen_height / 2:
-            #     if self.x < self.screen_width / 2:
-            #         self.x += self.speed_sideways
-            #     elif self.x > self.screen_width / 2:
-            #         self.x -= self.speed_sideways
-
 
             
 

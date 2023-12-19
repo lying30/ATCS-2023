@@ -1,5 +1,7 @@
 import pygame
 from fsm import FSM
+import random
+import math
 
 class Ball:
     def __init__(self, x, y):
@@ -45,23 +47,51 @@ class Ball:
         self.fsm.add_transition("move_right_middle", self.MOVE_UP, self.move_3, self.MOVE_UP)
         self.fsm.add_transition("move_right", self.MOVE_UP, self.move_4, self.MOVE_UP)
         
-        # Moving up, keep moving
+        # Moving up, start moving down
         self.fsm.add_transition("move_left", self.MOVE_DOWN, self.move_1, self.MOVE_DOWN)
         self.fsm.add_transition("move_left_middle", self.MOVE_DOWN, self.move_2, self.MOVE_DOWN)
         self.fsm.add_transition("move_right_middle", self.MOVE_DOWN, self.move_3, self.MOVE_DOWN)
         self.fsm.add_transition("move_right", self.MOVE_DOWN, self.move_4, self.MOVE_DOWN)
 
         # Contact with AI, move down + direction
-        self.fsm.add_transition("move_left", self.HIT_AI, self.move_1, self.MOVE_DOWN)
-        self.fsm.add_transition("move_left_middle", self.HIT_AI, self.move_2, self.MOVE_DOWN)
-        self.fsm.add_transition("move_right_middle", self.HIT_AI, self.move_3, self.MOVE_DOWN)
-        self.fsm.add_transition("move_right", self.HIT_AI, self.move_4, self.MOVE_DOWN)    
+        self.fsm.add_transition("move_left_ai", self.HIT_AI, self.move_1_ai, self.MOVE_DOWN)
+        self.fsm.add_transition("move_left_middle_ai", self.HIT_AI, self.move_2_ai, self.MOVE_DOWN)
+        self.fsm.add_transition("move_right_middle_ai", self.HIT_AI, self.move_3_ai, self.MOVE_DOWN)
+        self.fsm.add_transition("move_right_ai", self.HIT_AI, self.move_4_ai, self.MOVE_DOWN)    
         
-        # Contact with PLayer, move up + direction
+        # Contact with AI, keep moving
+        self.fsm.add_transition("move_left_ai", self.MOVE_DOWN, self.move_1_ai, self.MOVE_DOWN)
+        self.fsm.add_transition("move_left_middle_ai", self.MOVE_DOWN, self.move_2_ai, self.MOVE_DOWN)
+        self.fsm.add_transition("move_right_middle_ai", self.MOVE_DOWN, self.move_3_ai, self.MOVE_DOWN)
+        self.fsm.add_transition("move_right_ai", self.MOVE_DOWN, self.move_4_ai, self.MOVE_DOWN)    
+
+        # Contact with Player, move up + direction
         self.fsm.add_transition("move_left", self.HIT_PLAYER, self.move_1, self.MOVE_UP)
         self.fsm.add_transition("move_left_middle", self.HIT_PLAYER, self.move_2, self.MOVE_UP)
         self.fsm.add_transition("move_right_middle", self.HIT_PLAYER, self.move_3, self.MOVE_UP)
         self.fsm.add_transition("move_right", self.HIT_PLAYER, self.move_4, self.MOVE_UP)
+
+    # Contact with Player, keep moving
+        self.fsm.add_transition("move_left", self.MOVE_UP, self.move_1, self.MOVE_UP)
+        self.fsm.add_transition("move_left_middle", self.MOVE_UP, self.move_2, self.MOVE_UP)
+        self.fsm.add_transition("move_right_middle", self.MOVE_UP, self.move_3, self.MOVE_UP)
+        self.fsm.add_transition("move_right", self.MOVE_UP, self.move_4, self.MOVE_UP)
+        
+        # New transitions for collisions
+        self.fsm.add_transition("hit_player", self.MOVE_UP, None, self.HIT_PLAYER)
+        self.fsm.add_transition("hit_player", self.MOVE_DOWN, None, self.HIT_PLAYER)
+        self.fsm.add_transition("hit_player", self.SPAWN, None, self.HIT_PLAYER)
+        self.fsm.add_transition("hit_player", self.HIT_PLAYER, None, self.HIT_PLAYER)
+
+        self.fsm.add_transition("hit_ai", self.MOVE_UP, None, self.HIT_AI)
+        self.fsm.add_transition("hit_ai", self.MOVE_DOWN, None, self.HIT_AI)
+        self.fsm.add_transition("hit_ai", self.SPAWN, None, self.HIT_AI)
+        self.fsm.add_transition("hit_ai", self.HIT_AI, None, self.HIT_AI)
+
+
+
+
+
 
     def get_state(self):
         return self.fsm.current_state
@@ -69,57 +99,76 @@ class Ball:
 # Start ChatGPT Code: Methods for ball movement based on transitions
     def move_1(self):
         self.ball_started_moving = True
-        # Calculate rise and run for moving to the left side of the court
-        rise = -self.y  # Move upwards to reach the left side (negative y-coordinate)
-        run = -self.x  # Move leftwards to reach the left side (negative x-coordinate)
+        # Calculate the angle in radians (60 degrees = pi / 3 radians)
+        angle_radians = math.radians(100)
 
-        # Calculate the slope (rise over run)
-        if run != 0:  # Avoid division by zero
-            slope = rise / run
-            # Set the velocity based on slope
-            self.velocity_y = -self.speed * slope
-            self.velocity_x = -self.speed
+        # Calculate velocity components based on the angle
+        self.velocity_x = self.speed * math.cos(angle_radians)
+        self.velocity_y = -self.speed * math.sin(angle_radians)
 
     def move_2(self):
         self.ball_started_moving = True
-        # Calculate rise and run for moving to the left-middle side of the court
-        # Assuming left-middle is at 1/4th of the x-coordinate range
-        run = -self.x / 2  # Move leftwards to reach the left-middle side (negative x-coordinate)
-        rise = -self.y  # Move upwards to reach the left-middle side (negative y-coordinate)
+        # Calculate the angle in radians (60 degrees = pi / 3 radians)
+        angle_radians = math.radians(93)
 
-        # Calculate the slope (rise over run)
-        if run != 0:  # Avoid division by zero
-            slope = rise / run
-            # Set the velocity based on slope
-            self.velocity_y = -self.speed * slope
-            self.velocity_x = -self.speed
+        # Calculate velocity components based on the angle
+        self.velocity_x = self.speed * math.cos(angle_radians)
+        self.velocity_y = -self.speed * math.sin(angle_radians)
 
     def move_3(self):
         self.ball_started_moving = True
-        # Calculate rise and run for moving to the right-middle side of the court
-        # Assuming right-middle is at 3/4th of the x-coordinate range
-        run = self.screen_width - self.x  # Move rightwards to reach the right-middle side (positive x-coordinate)
-        rise = -self.y  # Move upwards to reach the right-middle side (negative y-coordinate)
+        # Calculate the angle in radians (60 degrees = pi / 3 radians)
+        angle_radians = math.radians(88)
 
-        # Calculate the slope (rise over run)
-        if run != 0:  # Avoid division by zero
-            slope = rise / run
-            # Set the velocity based on slope
-            self.velocity_y = -self.speed * slope
-            self.velocity_x = self.speed
+        # Calculate velocity components based on the angle
+        self.velocity_x = self.speed * math.cos(angle_radians)
+        self.velocity_y = -self.speed * math.sin(angle_radians)
 
     def move_4(self):
         self.ball_started_moving = True
-        # Calculate rise and run for moving to the right side of the court
-        rise = self.screen_height - self.y  # Move downwards to reach the right side (positive y-coordinate)
-        run = self.screen_width - self.x  # Move rightwards to reach the right side (positive x-coordinate)
+        # Calculate the angle in radians (60 degrees = pi / 3 radians)
+        angle_radians = math.radians(80)
 
-        # Calculate the slope (rise over run)
-        if run != 0:  # Avoid division by zero
-            slope = rise / run
-            # Set the velocity based on slope
-            self.velocity_y = -self.speed * slope
-            self.velocity_x = self.speed
+        # Calculate velocity components based on the angle
+        self.velocity_x = self.speed * math.cos(angle_radians)
+        self.velocity_y = -self.speed * math.sin(angle_radians)
+
+    def move_1_ai(self):
+        self.ball_started_moving = True
+        # Calculate the angle in radians (60 degrees = pi / 3 radians) for downward movement
+        angle_radians = math.radians(260)
+
+        # Calculate velocity components based on the angle
+        self.velocity_x = self.speed * math.cos(angle_radians)
+        self.velocity_y = self.speed * math.sin(angle_radians)
+
+    def move_2_ai(self):
+        self.ball_started_moving = True
+        # Calculate the angle in radians (60 degrees = pi / 3 radians) for downward movement
+        angle_radians = math.radians(267)
+
+        # Calculate velocity components based on the angle
+        self.velocity_x = self.speed * math.cos(angle_radians)
+        self.velocity_y = self.speed * math.sin(angle_radians)
+
+    def move_3_ai(self):
+        self.ball_started_moving = True
+        # Calculate the angle in radians (60 degrees = pi / 3 radians) for downward movement
+        angle_radians = math.radians(272)
+
+        # Calculate velocity components based on the angle
+        self.velocity_x = self.speed * math.cos(angle_radians)
+        self.velocity_y = self.speed * math.sin(angle_radians)
+
+    def move_4_ai(self):
+        self.ball_started_moving = True
+        # Calculate the angle in radians (60 degrees = pi / 3 radians) for downward movement
+        angle_radians = math.radians(280)
+
+        # Calculate velocity components based on the angle
+        self.velocity_x = self.speed * math.cos(angle_radians)
+        self.velocity_y = self.speed * math.sin(angle_radians)
+    
 
     def stop_vertical_movement(self):
         self.velocity_y = 0
@@ -128,7 +177,7 @@ class Ball:
         self.velocity_x = 0
 # End ChatGPT Code
 
-    def update(self):
+    def update(self, boolean_player, boolean_ai):
         # Update ball's position based on its velocity
         self.x += self.velocity_x
         self.y += self.velocity_y
@@ -144,10 +193,10 @@ class Ball:
             self.x = self.screen_width
 
         # Process input and adjust ball's direction and speed based on key press duration
-        self.handle_input()
+        self.handle_input(boolean_player, boolean_ai)
 
 # Start ChatGPT Code:
-    def handle_input(self):
+    def handle_input(self, boolean_player, boolean_ai):
         # Reset velocities
         self.velocity_x = 0
         self.velocity_y = 0
@@ -155,30 +204,61 @@ class Ball:
         # Check keyboard input for arrow keys or any other keys you want to use
         keys = pygame.key.get_pressed()
 
-        # Calculate time key is held down
-        if keys[pygame.K_1]:
-            self.fsm.process("move_left")  # Corresponding to move1 method in FSM transitions
-            self.key_up_pressed_time += 1
-        else:
-            self.key_up_pressed_time = 0
+        if boolean_player:
+            # Calculate time key is held down
+            if keys[pygame.K_1]:
+                self.fsm.process("move_left")  # Corresponding to move1 method in FSM transitions
+                self.key_up_pressed_time += 5
+            else:
+                self.key_up_pressed_time = 0
 
-        if keys[pygame.K_2]:
-            self.fsm.process("move_left_middle")  # Corresponding to move1 method in FSM transitions
-            self.key_down_pressed_time += 1
-        else:
-            self.key_down_pressed_time = 0
+            if keys[pygame.K_2]:
+                self.fsm.process("move_left_middle")  # Corresponding to move1 method in FSM transitions
+                self.key_down_pressed_time += 5
+            else:
+                self.key_down_pressed_time = 0
 
-        if keys[pygame.K_3]:
-            self.fsm.process("move_right_middle")  # Corresponding to move1 method in FSM transitions
-            self.key_left_pressed_time += 1
-        else:
-            self.key_left_pressed_time = 0
+            if keys[pygame.K_3]:
+                self.fsm.process("move_right_middle")  # Corresponding to move1 method in FSM transitions
+                self.key_left_pressed_time += 5
+            else:
+                self.key_left_pressed_time = 0
 
-        if keys[pygame.K_4]:
-            self.fsm.process("move_right")  # Corresponding to move1 method in FSM transitions
-            self.key_right_pressed_time += 1
-        else:
-            self.key_right_pressed_time = 0
+            if keys[pygame.K_4]:
+                self.fsm.process("move_right")  # Corresponding to move1 method in FSM transitions
+                self.key_right_pressed_time += 5
+                
+            else:
+                self.key_right_pressed_time = 0
+
+
+        if boolean_ai:
+            # Random choice of direction
+            random_direction = random.randint(1, 4)
+
+            if random_direction:
+                self.fsm.process("move_left_ai")  # Corresponding to move1 method in FSM transitions
+                self.key_up_pressed_time += 5
+            else:
+                self.key_up_pressed_time = 0
+
+            if random_direction:
+                self.fsm.process("move_left_middle_ai")  # Corresponding to move2 method in FSM transitions
+                self.key_down_pressed_time += 5
+            else:
+                self.key_down_pressed_time = 0
+
+            if random_direction:
+                self.fsm.process("move_right_middle_ai")  # Corresponding to move3 method in FSM transitions
+                self.key_left_pressed_time += 5
+            else:
+                self.key_left_pressed_time = 0
+
+            if random_direction:
+                self.fsm.process("move_right_ai")  # Corresponding to move4 method in FSM transitions
+                self.key_right_pressed_time += 5
+            else:
+                self.key_right_pressed_time = 0
 
         # Adjust ball's direction and speed based on key press duration
         if self.key_up_pressed_time > 0:
@@ -189,31 +269,41 @@ class Ball:
             self.velocity_x -= self.speed * self.speed_multiplier * self.key_left_pressed_time / 100
         if self.key_right_pressed_time > 0:
             self.velocity_x += self.speed * self.speed_multiplier * self.key_right_pressed_time / 100
+
+
+
+    def check_collision_with_player(self, player):
+        # Define a collision threshold of 50 units around the player's paddle
+        collision_threshold = 50
+
+        # Implement collision detection logic with the player paddle
+        if (self.x < player.x + player.width + collision_threshold and
+            self.x + self.ball_radius > player.x - collision_threshold and
+            self.y < player.y + player.height + collision_threshold and
+            self.y + self.ball_radius > player.y - collision_threshold):
+            # Collision detected with player within 50 units
+            # Adjust the ball's direction upon collision with the player
+            self.fsm.process("hit_player")
+            return True
+            # Adjust other aspects of the ball's behavior upon collision with the player if needed
+
+
+    def check_collision_with_ai(self, ai):
+        # Define a collision threshold of 50 units around the AI paddle
+        collision_threshold = 50
+
+        # Implement collision detection logic with the AI paddle
+        if (self.x < ai.x + ai.width + collision_threshold and
+            self.x + self.ball_radius > ai.x - collision_threshold and
+            self.y < ai.y + ai.height + collision_threshold and
+            self.y + self.ball_radius > ai.y - collision_threshold):
+            # Collision detected with AI paddle within 50 units
+            # Adjust the ball's direction upon collision with the AI paddle
+            self.fsm.process("hit_ai")
+            return True  # Reverse ball's x-direction
+            # Adjust other aspects of the ball's behavior upon collision with the AI paddle if needed
+
 # End ChatGPT Code
-
-
-    # def check_collision_with_player(self, player):
-    #     # Implement collision detection logic with the player paddle
-    #     if (self.x < player.x + player.width and
-    #             self.x + self.ball_radius > player.x and
-    #             self.y < player.y + player.height and
-    #             self.y + self.ball_radius > player.y):
-    #         # Collision detected with player
-    #         # Adjust the ball's direction upon collision with the player
-    #         self.velocity_x *= -1  # Reverse ball's x-direction
-    #         # Adjust other aspects of the ball's behavior upon collision with the player if needed
-
-
-    # def check_collision_with_ai(self, ai):
-    #     # Implement collision detection logic with the AI paddle
-    #     if (self.x < ai.x + ai.width and
-    #             self.x + self.ball_radius > ai.x and
-    #             self.y < ai.y + ai.height and
-    #             self.y + self.ball_radius > ai.y):
-    #         # Collision detected with AI paddle
-    #         # Adjust the ball's direction upon collision with the AI paddle
-    #         self.velocity_x *= -1  # Reverse ball's x-direction
-    #         # Adjust other aspects of the ball's behavior upon collision with the AI paddle if needed
 
     def draw(self, screen):
         # Draw the ball on the screen
