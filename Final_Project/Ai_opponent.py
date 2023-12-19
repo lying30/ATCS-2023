@@ -1,3 +1,6 @@
+# Lucas Ying - 12/18
+# Note: Any code that was not shown to be coded by ChatGPT was coded by myself
+ 
 import pygame
 from fsm import FSM
 

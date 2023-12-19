@@ -1,3 +1,6 @@
+# Lucas Ying - 12/18
+# Note: Any code that was not shown to be coded by ChatGPT was coded by myself
+ 
 import pygame
 import sys
 from ball import Ball
@@ -43,9 +46,6 @@ class Game:
 
             keys = pygame.key.get_pressed()
             self.player.update(keys)    
-                    
-            
-
 
             # Restrict the player to the bottom half of the court
             if self.player.y < self.screen_height // 2:

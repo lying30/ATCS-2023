@@ -1,7 +1,11 @@
+# Lucas Ying - 12/18
+# Note: Any code that was not shown to be coded by ChatGPT was coded by myself
+ 
 import pygame
 from fsm import FSM
 import random
 import math
+# CONTENT STANDARDS: Using a FSM throughout the whole ball class.
 
 class Ball:
     def __init__(self, x, y):
@@ -76,7 +80,7 @@ class Ball:
         self.fsm.add_transition("move_left_middle", self.MOVE_UP, self.move_2, self.MOVE_UP)
         self.fsm.add_transition("move_right_middle", self.MOVE_UP, self.move_3, self.MOVE_UP)
         self.fsm.add_transition("move_right", self.MOVE_UP, self.move_4, self.MOVE_UP)
-        
+
         # New transitions for collisions
         self.fsm.add_transition("hit_player", self.MOVE_UP, None, self.HIT_PLAYER)
         self.fsm.add_transition("hit_player", self.MOVE_DOWN, None, self.HIT_PLAYER)
@@ -88,15 +92,12 @@ class Ball:
         self.fsm.add_transition("hit_ai", self.SPAWN, None, self.HIT_AI)
         self.fsm.add_transition("hit_ai", self.HIT_AI, None, self.HIT_AI)
 
-
-
-
-
-
     def get_state(self):
         return self.fsm.current_state
 
 # Start ChatGPT Code: Methods for ball movement based on transitions
+    # Note: Couldn't figure out direction so that the balls would go back and forth, right now the ball 
+    # goes up but then the AI doesn't send the ball back down.
     def move_1(self):
         self.ball_started_moving = True
         # Calculate the angle in radians (60 degrees = pi / 3 radians)
@@ -136,7 +137,7 @@ class Ball:
     def move_1_ai(self):
         self.ball_started_moving = True
         # Calculate the angle in radians (60 degrees = pi / 3 radians) for downward movement
-        angle_radians = math.radians(260)
+        angle_radians = math.radians(262)
 
         # Calculate velocity components based on the angle
         self.velocity_x = self.speed * math.cos(angle_radians)
@@ -154,7 +155,7 @@ class Ball:
     def move_3_ai(self):
         self.ball_started_moving = True
         # Calculate the angle in radians (60 degrees = pi / 3 radians) for downward movement
-        angle_radians = math.radians(272)
+        angle_radians = math.radians(273)
 
         # Calculate velocity components based on the angle
         self.velocity_x = self.speed * math.cos(angle_radians)
@@ -163,7 +164,7 @@ class Ball:
     def move_4_ai(self):
         self.ball_started_moving = True
         # Calculate the angle in radians (60 degrees = pi / 3 radians) for downward movement
-        angle_radians = math.radians(280)
+        angle_radians = math.radians(278)
 
         # Calculate velocity components based on the angle
         self.velocity_x = self.speed * math.cos(angle_radians)
